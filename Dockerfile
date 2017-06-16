@@ -16,6 +16,7 @@ RUN mv /etc/apt/sources.list /etc/apt/sources.list.backup \
 RUN apt-get update && apt-get install -y software-properties-common python-software-properties imagemagick build-essential \
 	subversion git-core checkinstall texi2html libopencore-amrnb-dev libopencore-amrwb-dev libsdl1.2-dev \
 	libtheora-dev libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev libavcodec-dev nasm yasm libfaac0 \
+	dcraw ufraw gpac unzip\
 	&& apt-add-repository -y ppa:webupd8team/java && apt-get update -y 
 
 # install Oracle with it's lovelly license process
@@ -27,7 +28,7 @@ RUN cd /opt && git clone git://git.videolan.org/x264.git && cd x264 \
 	&& checkinstall --pkgname=x264 --default --backup=no --deldoc=yes --fstrans=no --pkgversion=3.4.5
 
 # install lame
-RUN cd /opt && wget http://downloads.sourceforge.net/project/lame/lame/3.98.4/lame-3.98.4.tar.gz \
+RUN cd /opt && wget -nv http://downloads.sourceforge.net/project/lame/lame/3.98.4/lame-3.98.4.tar.gz \
 	&& tar xzvf lame-3.98.4.tar.gz && cd lame-3.98.4 \
 	&& ./configure --enable-nasm --disable-shared \
 	&& make \
@@ -35,9 +36,9 @@ RUN cd /opt && wget http://downloads.sourceforge.net/project/lame/lame/3.98.4/la
 
 # install libvpx
 RUN cd /opt && git clone --depth=1 https://chromium.googlesource.com/webm/libvpx.git \
-	&& cd libvpx
-	&& ./configure
-	&& make
+	&& cd libvpx \
+	&& ./configure \
+	&& make \
 	&& checkinstall --pkgname=libvpx --pkgversion="`date +%Y%m%d%H%M`-git" --backup=no \
 		--default --deldoc=yes
 
@@ -47,32 +48,29 @@ RUN cd /opt && git clone --depth=1 git://source.ffmpeg.org/ffmpeg.git && cd ffmp
 	&& ./configure --enable-gpl --enable-version3 --enable-nonfree --enable-postproc \
 		--enable-libopencore-amrnb --enable-libopencore-amrwb \
 		--enable-libtheora --enable-libvorbis --enable-libx264 --enable-libxvid \
-		--enable-x11grab --enable-libvpx --enable-libmp3lame \
+		--enable-libvpx --enable-libmp3lame \
 	&& make \
-	&& sudo checkinstall --pkgname=ffmpeg --pkgversion="5:$(./version.sh)" --backup=no --deldoc=yes --default  \
-	&& hash x264 ffmpeg ffplay ffprobe
+	&& checkinstall --pkgname=ffmpeg --pkgversion=`./version.sh | sed -e "s#git-##g"` --backup=no --deldoc=yes --default 
 
 # install Exiftool
-RUN cd /opt && wget -c http://owl.phy.queensu.ca/%7Ephil/exiftool/Image-ExifTool-10.36.tar.gz
-	&& gzip -dc Image-ExifTool-10.36.tar.gz | tar -xf - && cd Image-ExifTool-10.36 
+RUN cd /opt && wget -nv -c http://owl.phy.queensu.ca/%7Ephil/exiftool/Image-ExifTool-10.36.tar.gz \
+	&& gzip -dc Image-ExifTool-10.36.tar.gz | tar -xf - && cd Image-ExifTool-10.36  \
 	&& perl Makefile.PL && make install
 
+# install Ghost Script
+#RUN cd /opt && wget -nv http://downloads.ghostscript.com/public/binaries/ghostscript-9.15-linux-x86_64.tgz \
+#	&& tar xzvf ghostscript-9.15-linux-x86_64.tgz \
+#	&& cd /usr/bin/ \
+#	&& ln -s /opt/ghostscript-9.15-linux-x86_64/gs-915-linux_x86_64 gs
 
 #configure Java home variable
 ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
-# install Ghost Script
-RUN wget http://downloads.ghostscript.com/public/binaries/ghostscript-9.15-linux-x86_64.tgz \
-	&& tar xzvf ghostscript-9.15-linux-x86_64.tgz \
-	&& cd /usr/bin/ \
-	&& ln -s /opt/ghostscript-9.15-linux-x86_64/gs-915-linux_x86_64 gs
+# install razuna
+RUN cd /opt && wget -nv http://cloud.razuna.com/installers/1.9.1/razuna_tomcat_1_9_1.zip \
+	&& unzip -q razuna_tomcat_1_9_1.zip && mv razuna_tomcat_1_9_1 razuna
 
-# install lame
-RUN cd /opt && wget http://downloads.sourceforge.net/project/lame/lame/3.98.4/lame-3.98.4.tar.gz \
-	&& tar xzvf lame-3.98.4.tar.gz && cd lame-3.98.4 \
-	&& ./configure --enable-nasm --disable-shared && make \
-	sudo checkinstall --pkgname=lame-ffmpeg --pkgversion="3.98.4" --backup=no --default --deldoc=yes
+EXPOSE 8080
 
-# grr, ENTRYPOINT resets CMD now
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["apache2-foreground"]
+WORKDIR /opt/razuna/tomcat/bin
+CMD ["./catalina.sh", "run"]
