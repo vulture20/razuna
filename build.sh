@@ -1,3 +1,2 @@
 #!/bin/bash
-docker build -t "razuna-webserver:1.0.0" .
-
+docker build -t "razuna:1.9.1" .
