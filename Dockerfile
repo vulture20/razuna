@@ -12,7 +12,7 @@ RUN mv /etc/apt/sources.list /etc/apt/sources.list.backup \
 	-e 's#archive.ubuntu.com#br.archive.ubuntu.com#g' /etc/apt/sources.list.backup > /etc/apt/sources.list
 
 
-# install the PHP extensions we need
+# install PHP extensions that are needed
 RUN apt-get update && apt-get install -y software-properties-common python-software-properties imagemagick build-essential \
 	subversion git-core checkinstall texi2html libopencore-amrnb-dev libopencore-amrwb-dev libsdl1.2-dev \
 	libtheora-dev libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev libavcodec-dev nasm yasm libfaac0 \
@@ -20,19 +20,23 @@ RUN apt-get update && apt-get install -y software-properties-common python-softw
 	&& apt-add-repository -y ppa:webupd8team/java && apt-get update -y 
 
 # install Oracle with it's lovelly license process
-RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections  && echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections  && apt-get install -y oracle-java8-installer  && rm -rf /var/lib/apt/lists/* 
+RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
+	&& echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections \
+	&& apt-get install -y oracle-java8-installer && rm -rf /var/lib/apt/lists/* 
 
 # install x264 codec
-RUN cd /opt && git clone git://git.videolan.org/x264.git && cd x264 \
+RUN cd /opt && git clone --depth=1 git://git.videolan.org/x264.git && cd x264 \
 	&& ./configure --enable-static --disable-opencl --disable-asm && make \
-	&& checkinstall --pkgname=x264 --default --backup=no --deldoc=yes --fstrans=no --pkgversion=3.4.5
+	&& checkinstall --pkgname=x264 --default --backup=no --deldoc=yes --fstrans=no --pkgversion=3.4.5 \
+	&& cd ../ && rm -rf x264
 
 # install lame
 RUN cd /opt && wget -nv http://downloads.sourceforge.net/project/lame/lame/3.98.4/lame-3.98.4.tar.gz \
 	&& tar xzvf lame-3.98.4.tar.gz && cd lame-3.98.4 \
 	&& ./configure --enable-nasm --disable-shared \
 	&& make \
-	&& checkinstall --pkgname=lame-ffmpeg --pkgversion="3.98.4" --backup=no --default --deldoc=yes
+	&& checkinstall --pkgname=lame-ffmpeg --pkgversion="3.98.4" --backup=no --default --deldoc=yes \
+	&& cd ../ && rm -rf lame-3.98.4
 
 # install libvpx
 RUN cd /opt && git clone --depth=1 https://chromium.googlesource.com/webm/libvpx.git \
@@ -40,22 +44,24 @@ RUN cd /opt && git clone --depth=1 https://chromium.googlesource.com/webm/libvpx
 	&& ./configure \
 	&& make \
 	&& checkinstall --pkgname=libvpx --pkgversion="`date +%Y%m%d%H%M`-git" --backup=no \
-		--default --deldoc=yes
+		--default --deldoc=yes \
+	&& cd ../ && rm -rf libvpx
 
 # install ffmpeg
 RUN cd /opt && git clone --depth=1 git://source.ffmpeg.org/ffmpeg.git && cd ffmpeg \
-	#&& git checkout release/2.5 \
 	&& ./configure --enable-gpl --enable-version3 --enable-nonfree --enable-postproc \
 		--enable-libopencore-amrnb --enable-libopencore-amrwb \
 		--enable-libtheora --enable-libvorbis --enable-libx264 --enable-libxvid \
 		--enable-libvpx --enable-libmp3lame \
 	&& make \
-	&& checkinstall --pkgname=ffmpeg --pkgversion=`./version.sh | sed -e "s#git-##g"` --backup=no --deldoc=yes --default 
+	&& checkinstall --pkgname=ffmpeg --pkgversion=`./version.sh | sed -e "s#git-##g"` --backup=no --deldoc=yes --default \
+	&& cd ../ && rm -rf ffmpeg
 
 # install Exiftool
 RUN cd /opt && wget -nv -c http://owl.phy.queensu.ca/%7Ephil/exiftool/Image-ExifTool-10.36.tar.gz \
 	&& gzip -dc Image-ExifTool-10.36.tar.gz | tar -xf - && cd Image-ExifTool-10.36  \
-	&& perl Makefile.PL && make install
+	&& perl Makefile.PL && make install \
+	&& cd ../ && rm -rf Image-ExifTool-10.36
 
 # install Ghost Script
 #RUN cd /opt && wget -nv http://downloads.ghostscript.com/public/binaries/ghostscript-9.15-linux-x86_64.tgz \
