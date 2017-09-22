@@ -1,5 +1,7 @@
 FROM ubuntu:latest
 
+LABEL maintainer="michel@michel.eti.br"
+
 # change repository for performance and enable other packages
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.backup \
  	&& sed \
@@ -17,12 +19,15 @@ RUN apt-get update && apt-get install -y software-properties-common python-softw
 	subversion git-core checkinstall texi2html libopencore-amrnb-dev libopencore-amrwb-dev libsdl1.2-dev \
 	libtheora-dev libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev libavcodec-dev nasm yasm libfaac0 \
 	dcraw ufraw gpac unzip\
-	&& apt-add-repository -y ppa:webupd8team/java && apt-get update -y 
+	&& apt-add-repository -y ppa:webupd8team/java \
+	&& apt-get update -y \
+	&& apt-get clean
 
 # install Oracle with it's lovelly license process
 RUN echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
 	&& echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections \
-	&& apt-get install -y oracle-java8-installer && rm -rf /var/lib/apt/lists/* 
+	&& apt-get install -y oracle-java8-installer \
+	&& rm -rf /var/lib/apt/lists/* 
 
 # install x264 codec
 RUN cd /opt && git clone --depth=1 git://git.videolan.org/x264.git && cd x264 \
@@ -74,7 +79,8 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 # install razuna
 RUN cd /opt && wget -nv http://cloud.razuna.com/installers/1.9.1/razuna_tomcat_1_9_1.zip \
-	&& unzip -q razuna_tomcat_1_9_1.zip && mv razuna_tomcat_1_9_1 razuna
+	&& unzip -q razuna_tomcat_1_9_1.zip && mv razuna_tomcat_1_9_1 razuna \
+	&& rm razuna_tomcat_1_9_1.zip
 
 EXPOSE 8080
 
