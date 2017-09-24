@@ -5,12 +5,12 @@ LABEL maintainer="michel@michel.eti.br"
 # change repository for performance and enable other packages
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.backup \
  	&& sed \
-	-e 's#deb http://archive.ubuntu.com/ubuntu/ xenial universe#deb http://archive.ubuntu.com/ubuntu/ xenial universe multiverse#g' \
-	-e 's#deb http://archive.ubuntu.com/ubuntu/ xenial-updates universe#deb http://archive.ubuntu.com/ubuntu/ xenial-updates universe multiverse#g' \
-	-e 's#deb-src http://archive.ubuntu.com/ubuntu/ xenial-updates universe#deb-src http://archive.ubuntu.com/ubuntu/ xenial-updates universe multiverse#g' \
-	-e 's#deb-src http://archive.ubuntu.com/ubuntu/ xenial universe#deb-src http://archive.ubuntu.com/ubuntu/ xenial universe multiverse#g' \
-	-e 's#\# deb http://archive.ubuntu.com/ubuntu/ xenial-security multiverse#deb http://archive.ubuntu.com/ubuntu/ xenial-security multiverse#g' \
-	-e 's#\# deb-src http://archive.ubuntu.com/ubuntu/ xenial-security multiverse#deb-src http://archive.ubuntu.com/ubuntu/ xenial-security multiverse#g' \
+	-e 's#deb http://archive.ubuntu.com/ubuntu/ xenial universe#deb http://archive.ubuntu.com/ubuntu/ xenial universe#g' \
+	-e 's#deb http://archive.ubuntu.com/ubuntu/ xenial-updates universe#deb http://archive.ubuntu.com/ubuntu/ xenial-updates universe#g' \
+	-e 's#deb-src http://archive.ubuntu.com/ubuntu/ xenial-updates universe#deb-src http://archive.ubuntu.com/ubuntu/ xenial-updates universe#g' \
+	-e 's#deb-src http://archive.ubuntu.com/ubuntu/ xenial universe#deb-src http://archive.ubuntu.com/ubuntu/ xenial universe#g' \
+	-e 's#\# deb http://archive.ubuntu.com/ubuntu/ xenial-security multiverse#deb http://archive.ubuntu.com/ubuntu/ xenial-security#g' \
+	-e 's#\# deb-src http://archive.ubuntu.com/ubuntu/ xenial-security multiverse#deb-src http://archive.ubuntu.com/ubuntu/ xenial-security#g' \
 	-e 's#archive.ubuntu.com#br.archive.ubuntu.com#g' /etc/apt/sources.list.backup > /etc/apt/sources.list
 
 
