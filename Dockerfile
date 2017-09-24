@@ -63,10 +63,10 @@ RUN cd /opt && git clone --depth=1 git://source.ffmpeg.org/ffmpeg.git && cd ffmp
 	&& cd ../ && rm -rf ffmpeg
 
 # install Exiftool
-RUN cd /opt && wget -nv -c http://owl.phy.queensu.ca/%7Ephil/exiftool/Image-ExifTool-10.36.tar.gz \
-	&& gzip -dc Image-ExifTool-10.36.tar.gz | tar -xf - && cd Image-ExifTool-10.36  \
+RUN cd /opt && wget -nv -c "https://downloads.sourceforge.net/project/exiftool/Image-ExifTool-10.61.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fexiftool%2Ffiles%2F%3Fsource%3Dnavbar&ts=1506268522&use_mirror=ufpr" -O "Image-ExifTool-10.61.tar.gz" \
+	&& gzip -dc Image-ExifTool-10.61.tar.gz | tar -xf - && cd Image-ExifTool-10.61  \
 	&& perl Makefile.PL && make install \
-	&& cd ../ && rm -rf Image-ExifTool-10.36
+	&& cd ../ && rm -rf Image-ExifTool-10.61
 
 # install Ghost Script
 #RUN cd /opt && wget -nv http://downloads.ghostscript.com/public/binaries/ghostscript-9.15-linux-x86_64.tgz \
