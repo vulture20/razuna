@@ -78,9 +78,9 @@ RUN cd /opt && wget -nv -c "https://downloads.sourceforge.net/project/exiftool/I
 ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 # install razuna
-RUN cd /opt && wget -nv http://cloud.razuna.com/installers/1.9.1/razuna_tomcat_1_9_1.zip \
-	&& unzip -q razuna_tomcat_1_9_1.zip && mv razuna_tomcat_1_9_1 razuna \
-	&& rm razuna_tomcat_1_9_1.zip
+RUN cd /opt && wget -nv http://cloud.razuna.com/installers/1.9.6/razuna_tomcat_1_9_6.zip \
+	&& unzip -q razuna_tomcat_1_9_6.zip && mv razuna_tomcat_1_9_6 razuna \
+	&& rm razuna_tomcat_1_9_6.zip
 
 EXPOSE 8080
 
