@@ -6,10 +6,10 @@ Razuna DAM is the open source alternative for Digital Asset Management Systems, 
 
 You can use the `build.sh` script or:
 
-`docker build -t "razuna:1.9.1" .`
+`docker build -t "razuna:1.9.6" .`
 
 ### Running ###
 
 You can use `run.sh` script or:
 
-`docker run --name razuna -p 8080:8080 razuna:1.9.1`
+`docker run --name razuna -p 8080:8080 razuna:1.9.6`
