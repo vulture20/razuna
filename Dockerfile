@@ -15,7 +15,7 @@ RUN mv /etc/apt/sources.list /etc/apt/sources.list.backup \
 
 
 # install PHP extensions that are needed
-RUN apt-get update && apt-get install -y software-properties-common imagemagick build-essential \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y software-properties-common imagemagick build-essential \
 	subversion git-core checkinstall texi2html libopencore-amrnb-dev libopencore-amrwb-dev libsdl1.2-dev \
 	libtheora-dev libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev libavcodec-dev nasm yasm libfaac0 \
 	dcraw gpac unzip\
