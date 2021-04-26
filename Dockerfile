@@ -20,8 +20,8 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 RUN apt-get install -y software-properties-common imagemagick build-essential \
         subversion git-core checkinstall texi2html libopencore-amrnb-dev libopencore-amrwb-dev libsdl1.2-dev \
         libtheora-dev libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev libavcodec-dev nasm yasm libfaac0 \
-        dcraw gpac unzip wget default-jre-headless\
-        && apt-add-repository -y ppa:webupd8team/java \
+        dcraw gpac unzip wget\
+#        && apt-add-repository -y ppa:webupd8team/java \
         && apt-get update -y \
         && apt-get clean
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
@@ -31,7 +31,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tz
 #       && echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections \
 #       && apt-get install -y oracle-java8-installer \
 #       && rm -rf /var/lib/apt/lists/*
-RUN apt-get install -y default-jre
+#RUN apt-get install -y default-jre
+RUN mkdir /usr/java
+RUN cd /usr/java/ && wget -nv "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=244575_d7fc238d0cbf4b0dac67be84580cfb4b" -O "jre-8u291-linux-x64.tar.gz" \
+        && tar zxvf jre-8u291-linux.tar.gz \
+        && rm -f jre-8u291-linux.tar.gz
 
 # install x264 codec
 #RUN cd /opt && git clone --depth=1 git://git.videolan.org/x264.git && cd x264 \
@@ -82,6 +86,7 @@ RUN cd /opt && wget -nv -c "https://phoenixnap.dl.sourceforge.net/project/exifto
 
 #configure Java home variable
 #ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle
+ENV JAVA_HOME=/usr/java/jre1.8.0_291
 
 # install razuna
 RUN cd /opt && wget -nv http://cloud.razuna.com/installers/1.9.6/razuna_tomcat_1_9_6.zip \
