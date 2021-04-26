@@ -20,7 +20,7 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 RUN apt-get install -y software-properties-common imagemagick build-essential \
         subversion git-core checkinstall texi2html libopencore-amrnb-dev libopencore-amrwb-dev libsdl1.2-dev \
         libtheora-dev libvorbis-dev libx11-dev libxfixes-dev libxvidcore-dev zlib1g-dev libavcodec-dev nasm yasm libfaac0 \
-        dcraw gpac unzip wget\
+        dcraw gpac unzip wget default-jre-headless\
         && apt-add-repository -y ppa:webupd8team/java \
         && apt-get update -y \
         && apt-get clean
@@ -81,7 +81,7 @@ RUN cd /opt && wget -nv -c "https://phoenixnap.dl.sourceforge.net/project/exifto
 #       && ln -s /opt/ghostscript-9.15-linux-x86_64/gs-915-linux_x86_64 gs
 
 #configure Java home variable
-ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle
+#ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
 # install razuna
 RUN cd /opt && wget -nv http://cloud.razuna.com/installers/1.9.6/razuna_tomcat_1_9_6.zip \
