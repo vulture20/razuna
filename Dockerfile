@@ -34,8 +34,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tz
 #RUN apt-get install -y default-jre
 RUN mkdir /usr/java
 RUN cd /usr/java/ && wget -nv "https://javadl.oracle.com/webapps/download/AutoDL?BundleId=244575_d7fc238d0cbf4b0dac67be84580cfb4b" -O "jre-8u291-linux-x64.tar.gz" \
-        && tar zxvf jre-8u291-linux.tar.gz \
-        && rm -f jre-8u291-linux.tar.gz
+        && tar zxvf jre-8u291-linux-x64.tar.gz \
+        && rm -f jre-8u291-linux-x64.tar.gz
 
 # install x264 codec
 #RUN cd /opt && git clone --depth=1 git://git.videolan.org/x264.git && cd x264 \
